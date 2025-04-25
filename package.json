@@ -694,6 +694,19 @@
                     "default": "true",
                     "markdownDescription": "Use `texdef` to find definitions for LaTeX macros"
                 },
+                "latex-utilities.texdef.tex": {
+                    "type": "string",
+                    "default": "latex",
+                    "enum": [
+                        "latex",
+                        "tex",
+                        "luatex",
+                        "lualatex",
+                        "xetex",
+                        "xelatex"
+                    ],
+                    "markdownDescription": "Sets the `--tex <format>` option of the `texdef` command. This determines the TeX format used when resolving LaTeX macro definitions."
+                },
                 "latex-utilities.zotero.zoteroUrl": {
                     "type": "string",
                     "default": "http://localhost:23119",
