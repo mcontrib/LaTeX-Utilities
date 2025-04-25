@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import * as path from 'path'
 import { Extension } from '../main'
 import { checkCommandExists } from '../utils'
 import { spawn } from 'child_process'
@@ -54,7 +55,8 @@ export class MacroDefinitions implements vscode.DefinitionProvider {
             texdefOptions.push('--class', documentClass !== null ? documentClass : 'article')
             texdefOptions.push(document.getText(command))
 
-            const texdefResult = await this.getFirstLineOfOutput('texdef', texdefOptions)
+            const cwd = path.dirname(document.fileName)
+            const texdefResult = await this.getFirstLineOfOutput('texdef', texdefOptions, cwd)
 
             const resultPattern = /% (.+), line (\d+):/
             let result: RegExpMatchArray | null
@@ -88,12 +90,12 @@ export class MacroDefinitions implements vscode.DefinitionProvider {
         return null
     }
 
-    private async getFirstLineOfOutput(command: string, options: string[]): Promise<string> {
+    private async getFirstLineOfOutput(command: string, options: string[], cwd: string): Promise<string> {
         return new Promise(resolve => {
             const startTime = +new Date()
             this.extension.logger.addLogMessage(`Running command ${command} ${options.join(' ')}`)
             try {
-                const cmdProcess = spawn(command, options)
+                const cmdProcess = spawn(command, options, { cwd })
 
                 cmdProcess.stdout.on('data', data => {
                     this.extension.logger.addLogMessage(
