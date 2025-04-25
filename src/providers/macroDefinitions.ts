@@ -107,8 +107,6 @@ export class MacroDefinitions implements vscode.DefinitionProvider {
                 cmdProcess.stderr.on('data', (data) => {
                     const errorMessage = data.toString().replaceAll('\n', '')
                     this.extension.logger.addLogMessage(`Error running texdef for ${options[options.length - 1]} ${errorMessage}`)
-                    cmdProcess.kill()
-                    resolve('')
                 })
                 cmdProcess.stdout.on('end', () => {
                     resolve('')
